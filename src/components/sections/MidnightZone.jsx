@@ -48,7 +48,7 @@ const EncounterLog = () => {
           {phase === 'hidden' && (
             <motion.div key="scan" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                <div style={{ width: '100px', height: '100px', border: '1px solid var(--accent-midnight)', borderRadius: '50%', position: 'relative' }}>
-                 <div style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', height: '1px', background: 'var(--accent-midnight)', transformOrigin: 'left center', animation: 'radarSweep 2s linear infinite' }}/>
+                 <div style={{ position: 'absolute', top: '50%', left: '50%', width: '45%', height: '1px', background: 'var(--accent-midnight)', transformOrigin: 'left center', animation: 'radarSweep 2s linear infinite' }}/>
                  <div style={{ position: 'absolute', top: '30%', left: '60%', width: '4px', height: '4px', background: '#fff', borderRadius: '50%', boxShadow: '0 0 5px #fff', animation: 'ping 2s infinite' }}/>
                </div>
             </motion.div>

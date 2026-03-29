@@ -11,13 +11,16 @@ const LightExtinction = () => {
   const greenOp = depth > 100 ? 0 : 1 - (depth/100);
   const blueOp = depth > 800 ? 0.2 : 1 - (depth/1000);
 
+  const lightPct = depth < 200 ? Math.round((1 - depth/200) * 100) : 0;
+  const zone = depth < 200 ? 'EPIPELAGIC' : depth < 1000 ? 'MESOPELAGIC' : 'BATHYPELAGIC';
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       className="glass-panel"
-      style={{ padding: '2.5rem' }}
+      style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}
     >
       <h4 className="mono-reading" style={{ color: 'var(--bio-blue)', marginBottom: '25px', letterSpacing: '0.3em', fontSize: '10px' }}>LIGHT EXTINCTION SIMULATOR</h4>
       
@@ -38,7 +41,7 @@ const LightExtinction = () => {
         style={{ width: '100%', cursor: 'ew-resize', accentColor: 'var(--bio-blue)', marginBottom: '20px' }}
       />
 
-      <div style={{ minHeight: '60px' }}>
+      <div style={{ minHeight: '50px', marginBottom: '20px' }}>
         <p className="body-narrow" style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
           {depth < 15 && "Full visible spectrum. All wavelengths present."}
           {depth >= 15 && depth < 50 && "Red light absorbed. Blood turns green at depth."}
@@ -46,6 +49,27 @@ const LightExtinction = () => {
           {depth >= 200 && depth < 800 && "Mesopelagic threshold. 1% of surface light."}
           {depth >= 800 && "Total extinction. Only bioluminescence remains."}
         </p>
+      </div>
+
+      {/* Wavelength absorption data to fill the panel */}
+      <div style={{ marginTop: 'auto', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '15px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+          <div>
+            <div className="mono-reading" style={{ fontSize: '8px', opacity: 0.3, marginBottom: '4px' }}>LIGHT REMAINING</div>
+            <div className="mono-reading" style={{ fontSize: '1.2rem', color: lightPct > 0 ? '#fff' : 'var(--bio-blue)' }}>{lightPct}%</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div className="mono-reading" style={{ fontSize: '8px', opacity: 0.3, marginBottom: '4px' }}>CURRENT ZONE</div>
+            <div className="mono-reading" style={{ fontSize: '10px', color: 'var(--bio-blue)' }}>{zone}</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '6px', fontSize: '8px', opacity: 0.4 }}>
+          <span style={{ color: redOp > 0 ? '#ff4444' : 'rgba(255,255,255,0.2)', transition: 'color 0.3s' }}>RED {redOp > 0 ? '●' : '✕'}</span>
+          <span style={{ color: orangeOp > 0 ? '#ff7f00' : 'rgba(255,255,255,0.2)', transition: 'color 0.3s' }}>ORG {orangeOp > 0 ? '●' : '✕'}</span>
+          <span style={{ color: yellowOp > 0 ? '#ffff00' : 'rgba(255,255,255,0.2)', transition: 'color 0.3s' }}>YLW {yellowOp > 0 ? '●' : '✕'}</span>
+          <span style={{ color: greenOp > 0 ? '#00ff00' : 'rgba(255,255,255,0.2)', transition: 'color 0.3s' }}>GRN {greenOp > 0 ? '●' : '✕'}</span>
+          <span style={{ color: blueOp > 0.2 ? '#4444ff' : 'rgba(255,255,255,0.2)', transition: 'color 0.3s' }}>BLU {blueOp > 0.2 ? '●' : '✕'}</span>
+        </div>
       </div>
     </motion.div>
   );
@@ -81,20 +105,20 @@ const MigrationClock = () => {
           </div>
         ))}
         
-        {/* Fixed Clock Arm — proper pivot from center */}
+        {/* Fixed Clock Arm — small, proper pivot from center */}
         <motion.div 
           animate={{ rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
           style={{ 
             position: 'absolute', 
             top: '50%', left: '50%', 
-            width: '2px', height: '80px', 
+            width: '1px', height: '55px', 
             background: 'linear-gradient(to top, transparent, var(--bio-blue))',
             transformOrigin: '50% 0%',
-            marginLeft: '-1px'
+            marginLeft: '-0.5px'
           }}
         >
-          <div style={{ width: '5px', height: '5px', background: '#fff', borderRadius: '50%', position: 'absolute', bottom: '-2px', left: '-1.5px', boxShadow: '0 0 8px var(--bio-blue)' }} />
+          <div style={{ width: '4px', height: '4px', background: '#fff', borderRadius: '50%', position: 'absolute', bottom: '-2px', left: '-1.5px', boxShadow: '0 0 6px var(--bio-blue)' }} />
         </motion.div>
 
         {/* Center dot */}
@@ -112,7 +136,7 @@ const MigrationClock = () => {
   );
 };
 
-// 3. Trophic Web — Proper Vertical Hierarchy
+// 3. Trophic Web — Horizontal Layout
 const TrophicWeb = () => {
   const levels = [
     { name: 'SURFACE EXPORT', items: 'Marine Snow / POC', energy: '100%', icon: '❄️' },
@@ -129,66 +153,35 @@ const TrophicWeb = () => {
       className="glass-panel"
       style={{ padding: '3rem 2.5rem' }}
     >
-      <h4 className="mono-reading" style={{ color: 'var(--bio-blue)', marginBottom: '3rem', letterSpacing: '0.3em', fontSize: '10px' }}>TROPHIC PYRAMID</h4>
+      <h4 className="mono-reading" style={{ color: 'var(--bio-blue)', marginBottom: '2.5rem', letterSpacing: '0.3em', fontSize: '10px' }}>TROPHIC PYRAMID</h4>
       
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0', position: 'relative' }}>
-        {/* Central Flow Line */}
-        <div style={{ position: 'absolute', top: '40px', bottom: '40px', left: '50%', width: '1px', background: 'linear-gradient(180deg, var(--bio-blue), rgba(0,255,255,0.05))', opacity: 0.3, transform: 'translateX(-50%)' }} />
+      {/* Horizontal flow */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', position: 'relative' }}>
+        {/* Horizontal Flow Line */}
+        <div style={{ position: 'absolute', top: '40px', left: '12%', right: '12%', height: '1px', background: 'linear-gradient(90deg, var(--bio-blue), rgba(0,255,255,0.05))', opacity: 0.3, zIndex: 0 }} />
 
         {levels.map((level, i) => (
           <motion.div 
             key={level.name} 
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -15 }}
+            whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.12, duration: 0.6 }}
-            style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 70px 1fr',
-              alignItems: 'center', 
-              width: '100%', 
-              gap: '20px',
-              zIndex: 1,
-              padding: '20px 0'
-            }}
+            style={{ textAlign: 'center', zIndex: 1 }}
           >
-            {/* Left side: name & items (even) or energy (odd) */}
-            <div style={{ textAlign: 'right' }}>
-              {i % 2 === 0 ? (
-                <>
-                  <div className="mono-reading" style={{ color: 'var(--bio-blue)', fontSize: '9px', marginBottom: '5px' }}>{level.name}</div>
-                  <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>{level.items}</div>
-                </>
-              ) : (
-                <>
-                  <div className="mono-reading" style={{ fontSize: '1.4rem', color: '#fff' }}>{level.energy}</div>
-                  <div className="mono-reading" style={{ fontSize: '7px', opacity: 0.3 }}>AVAILABLE ENERGY</div>
-                </>
-              )}
-            </div>
-
-            {/* Center icon */}
             <div style={{ 
-              width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(0,0,0,0.6)', 
+              width: '55px', height: '55px', borderRadius: '50%', background: 'rgba(0,0,0,0.6)', 
               border: '1px solid rgba(0,255,255,0.15)', display: 'flex', alignItems: 'center', 
-              justifyContent: 'center', fontSize: '1.5rem', margin: '0 auto'
+              justifyContent: 'center', fontSize: '1.4rem', margin: '0 auto 15px auto'
             }}>
               {level.icon}
             </div>
-
-            {/* Right side: energy (even) or name & items (odd) */}
-            <div style={{ textAlign: 'left' }}>
-              {i % 2 === 0 ? (
-                <>
-                  <div className="mono-reading" style={{ fontSize: '1.4rem', color: '#fff' }}>{level.energy}</div>
-                  <div className="mono-reading" style={{ fontSize: '7px', opacity: 0.3 }}>AVAILABLE ENERGY</div>
-                </>
-              ) : (
-                <>
-                  <div className="mono-reading" style={{ color: 'var(--bio-blue)', fontSize: '9px', marginBottom: '5px' }}>{level.name}</div>
-                  <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem' }}>{level.items}</div>
-                </>
-              )}
-            </div>
+            <div className="mono-reading" style={{ color: 'var(--bio-blue)', fontSize: '8px', marginBottom: '6px', lineHeight: 1.3 }}>{level.name}</div>
+            <div className="mono-reading" style={{ fontSize: '1.3rem', color: '#fff', marginBottom: '4px' }}>{level.energy}</div>
+            <div className="mono-reading" style={{ fontSize: '7px', opacity: 0.3, marginBottom: '8px' }}>ENERGY</div>
+            <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.4 }}>{level.items}</div>
+            {i < levels.length - 1 && (
+              <div style={{ position: 'absolute', top: '37px', left: `${(i + 1) * 25 - 2}%`, color: 'rgba(0,255,255,0.3)', fontSize: '10px' }}>→</div>
+            )}
           </motion.div>
         ))}
       </div>
