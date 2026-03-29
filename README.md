@@ -1,4 +1,4 @@
-# ABYSS — An Ocean Descent in Seven Acts
+# ABYSS - An Ocean Descent in Seven Acts
 
 A cinematic, scroll-driven descent from the ocean surface to the deepest point on Earth. Built for IIT Patna Frontend Odyssey 2026.
 
