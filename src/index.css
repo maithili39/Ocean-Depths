@@ -1,0 +1,172 @@
+/* ============================================================
+   ABYSS DEFINITIVE EDITION (Anti-AI)
+   Cinematic Descent Machine
+   ============================================================ */
+
+/* Bespoke Typography */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Archivo+Narrow:wght@400;500;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  /* Ocean Gradients - True Hue Shifts */
+  --zone-0-surface:   #0d4f6e;
+  --zone-1-sunlight:  #0a3d54;
+  --zone-2-twilight:  #061e35;
+  --zone-3-midnight:  #030d1f;
+  --zone-4-abyssal:   #020810;
+  --zone-5-hadal:     #010305;
+
+  /* Accent Colors */
+  --accent-surface:   #48cae4;
+  --accent-twilight:  #0096c7;
+  --accent-midnight:  #00b4d8;
+  --accent-abyssal:   #90e0ef;
+  --accent-hadal:     #caf0f8;
+  --accent-current-zone: var(--accent-surface); /* Will be updated via React inline style on wrapper */
+
+  /* Bioluminescent Glows */
+  --bio-green:  #39ff14;
+  --bio-blue:   #00ffff;
+  --bio-purple: #bf00ff;
+
+  /* Typography Systems */
+  --font-display: 'Playfair Display', serif;
+  --font-body:    'Archivo Narrow', sans-serif;
+  --font-mono:    'Share Tech Mono', monospace;
+
+  /* Physical Animation Weights */
+  --ease-ocean: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-pressure: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-bio: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Base Reset & Texture */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { 
+  scroll-behavior: auto; /* Handle smoothly with JS/Framer */
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--zone-0-surface);
+  color: #f0f4f8;
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.4;
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Micro-detail Custom Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { 
+  background: var(--accent-current-zone); 
+  transition: background 0.5s var(--ease-ocean);
+}
+::selection { background: rgba(255,255,255,0.1); color: var(--accent-current-zone); }
+
+/* Editorial Typography */
+/* Note: Huge zone titles are clamped and styled directly in components for exact offsets */
+.editorial-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  color: #ffffff;
+  /* Slightly more conservative font scaling for better layout balance */
+  font-size: clamp(4rem, 15vw, 12rem); 
+}
+
+.mono-reading {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-current-zone);
+  opacity: 0.8;
+}
+
+.body-narrow {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 38ch;
+  color: rgba(240, 244, 248, 0.85);
+  text-wrap: balance;
+}
+
+/* Premium Layout Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 2.5rem;
+  transition: all 0.4s var(--ease-ocean);
+}
+
+.glass-panel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent-current-zone);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.stagger-container > * {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Animations */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes filmstrip {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes surfaceCaustics {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+@keyframes crtFlicker {
+  0%, 100% { opacity: 1; text-shadow: 0 0 5px var(--accent-current-zone); }
+  2% { opacity: 0.97; text-shadow: 0 0 2px var(--accent-current-zone); }
+  4% { opacity: 0.85; text-shadow: none; }
+  6% { opacity: 1; text-shadow: 0 0 10px var(--accent-current-zone); }
+  10% { opacity: 0.99; text-shadow: 0 0 5px var(--accent-current-zone); }
+}
+
+.crt-flicker {
+  animation: crtFlicker 6s infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Layout helpers for asymmetric sections */
+.section-full {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  padding: 5vh 8vw; /* Reduced padding for seamless transitions */
+  display: flex;
+  flex-direction: column;
+}
+
+.parallax-bg {
+  position: absolute;
+  inset: -10%;
+  z-index: -1;
+  pointer-events: none;
+}
